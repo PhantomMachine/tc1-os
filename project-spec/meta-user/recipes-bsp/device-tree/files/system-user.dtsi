@@ -1,0 +1,43 @@
+/include/ "system-conf.dtsi"
+/ {
+    gpio@41200000 {
+        compatible = "axi_gpio_0, generic-uio, ui_pdrv"; 
+        status = "okay";
+    };
+
+    // chosen {
+    //     bootargs = "earlycon clk_ignore_unused consoleblank=0 cma=1700M uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait ";
+    //     stdout-path = "serial0:115200n8";
+    // }; 
+
+    chosen {
+        bootargs = "console=ttyPS0,115200 earlyprintk uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rw rootwait";
+    };
+
+	usb_phy0: usb_phy@0 {
+		compatible = "ulpi-phy";
+		#phy-cells = <0>;
+		reg = <0xe0002000 0x1000>;
+		view-port = <0x0170>;
+		drv-vbus;
+	};
+};
+
+&usb0 {
+	dr_mode = "host";
+	status = "okay";
+	usb-phy = <&usb_phy0>;
+};
+
+&axi_gpio_0 {
+    compatible = "generic-uio";
+};
+
+
+&tc1_hier_axi_quad_spi_0 {
+	spidev@0 {
+		reg = <0>;
+		compatible = "spidev";
+		spi-max-frequency = <25000000>;
+	};
+};
